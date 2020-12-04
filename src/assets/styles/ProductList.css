@@ -1,0 +1,5 @@
+@media (max-width: 600px) {
+    .border-low {
+        border-bottom: 1px solid #dee2e6;
+    }
+}

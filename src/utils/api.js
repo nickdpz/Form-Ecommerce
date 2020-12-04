@@ -1,6 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios';
-const URL_BASE = 'https://blackisp.herokuapp.com'
+import env from "react-dotenv";
+const URL_BASE = env.URL_BASE;
 
 const getProvinces = async() => {
     try {

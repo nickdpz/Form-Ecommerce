@@ -39,7 +39,7 @@ class Home extends Component {
 
 	render() {
 		return (
-			<div className="mt-3 mx-4 w-100">
+			<div className="mt-3 w-100">
 				<div className="sweet-loading mt-4">
 					<ClipLoader
 						css={override}
