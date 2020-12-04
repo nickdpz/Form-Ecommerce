@@ -5,13 +5,19 @@ import api from '../utils/api';
 
 class Home extends Component {
 	state = {
-        loading: false,
-        error: null
+		loading: false,
+		error: null,
 	};
 
-	fetchData = async (value = 1) => {
-		this.setState({ loading: true, error: null });
-	};
+	async fetchData() {
+        this.setState({ loading: true, error: null });
+		try {
+			const data = api.getProvinces();
+			console.log(data);
+		} catch (error) {
+			this.setState({ error });
+		}
+	}
 
 	componentDidMount() {
 		this.fetchData();
@@ -20,8 +26,7 @@ class Home extends Component {
 	render() {
 		return (
 			<>
-				<main className="container-full">
-				</main>
+				<main className="container-full"></main>
 			</>
 		);
 	}
