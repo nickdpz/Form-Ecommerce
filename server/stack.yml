@@ -1,0 +1,25 @@
+version: '3'
+services:
+  form-e-commerce:
+    image: form-e-commerce
+    env_file:
+        - ../.env
+    ports:
+      - "8000:80"
+    networks:
+      - proxy
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          memory: 128M
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.form.rule=Host(`form.nickdpz.com.co`)"
+      - "traefik.http.routers.form.tls=true"
+      - "traefik.http.routers.form.tls.certresolver=le"
+      - "traefik.http.services.form.loadbalancer.server.port=8000"
+networks:
+  proxy:
+    external: true

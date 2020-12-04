@@ -1,0 +1,10 @@
+version: '3'
+services:
+  form-e-commerce:
+    image: form-e-commerce
+    container_name: form-e-commerce-container
+    restart: on-failure
+    env_file:
+        - ../.env
+    ports:
+      - "8000:80"
