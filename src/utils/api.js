@@ -10,4 +10,13 @@ const getProvinces = async() => {
         throw error;
     }
 }
-export default { getProvinces }
+
+const getProducts = async() => {
+    try {
+        const { data } = await axios.get(`${URL_BASE}/products`)
+        return data
+    } catch (error) {
+        throw error;
+    }
+}
+export default { getProvinces, getProducts }
