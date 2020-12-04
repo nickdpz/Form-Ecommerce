@@ -26,11 +26,8 @@ Build docker container.\
 ### `docker build -f ./server/Dockerfile -t form-e-commerce .`
 
 Run docker container.\
-
 ### `docker-compose -f ./server/docker-compose.yml -d up`
 
-Run docker container.\
-### `docker-compose -f ./server/docker-compose.yml -d up`
 
 Deploy with docker swarm.\
 ### `docker stack deploy -c ./server/stack.yml form`
