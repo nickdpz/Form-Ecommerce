@@ -28,3 +28,13 @@ Build docker container.\
 Run docker container.\
 
 ### `docker-compose -f ./server/docker-compose.yml -d up`
+
+Run docker container.\
+### `docker-compose -f ./server/docker-compose.yml -d up`
+
+Deploy with docker swarm.\
+### `docker stack deploy -c ./server/stack.yml form`
+
+Network.\
+
+### `docker network create --driver overlay proxy`
