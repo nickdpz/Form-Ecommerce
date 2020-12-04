@@ -1,6 +1,7 @@
 import React from 'react';
 import numeral from 'numeral';
-import '../assets/styles/ProductList.css'
+import '../assets/styles/ProductList.css';
+import { Button } from '@material-ui/core';
 
 export default function ProductList({ products }) {
 	console.log(products);
@@ -35,12 +36,12 @@ export default function ProductList({ products }) {
 						</div>
 					))}
 				</div>
-				<div className="row px-5 d-flex justify-content-end justify-content-lg-center justify-content-xl-center">
-						
+				<div className="row px-5 d-flex justify-content-end mt-3">
+					<Button variant="contained" color="secondary">
+						Editar
+					</Button>
 				</div>
-				<div className="row">
-					
-				</div>
+				<div className="row"></div>
 			</div>
 		</div>
 	);

@@ -4,6 +4,7 @@ import api from '../utils/api';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ProductList from '../components/ProductList';
+import FormUser from '../components/FormUser';
 
 const override = css`
 	display: block;
@@ -51,6 +52,7 @@ class Home extends Component {
 				{!this.state.loading && (
 					<>
 						<ProductList products={this.state.products} />
+						<FormUser />
 					</>
 				)}
 			</div>
