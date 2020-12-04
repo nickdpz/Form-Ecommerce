@@ -3,7 +3,7 @@ import '../assets/styles/Home.css';
 import api from '../utils/api';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
-import ProductList from '../components/ProductList'
+import ProductList from '../components/ProductList';
 
 const override = css`
 	display: block;
@@ -14,20 +14,20 @@ const override = css`
 class Home extends Component {
 	state = {
 		loading: true,
-        error: null,
-        products:[],
-        provinces:[]
+		error: null,
+		products: [],
+		provinces: [],
 	};
 
 	async fetchData() {
-        this.setState({ loading: true, error: null });
-        let data;
+		this.setState({ loading: true, error: null });
+		let data;
 		try {
-            data = await api.getProvinces();
-            this.setState({provinces:data})
-            data = await api.getProducts()
-            this.setState({products:data})
-            this.setState({ loading: false, error: null });
+			data = await api.getProvinces();
+			this.setState({ provinces: data });
+			data = await api.getProducts();
+			this.setState({ products: data });
+			this.setState({ loading: false, error: null });
 		} catch (error) {
 			this.setState({ error });
 		}
@@ -39,24 +39,21 @@ class Home extends Component {
 
 	render() {
 		return (
-			<>
-				<div className="mt-3 mx-4">
-                <div className="sweet-loading mt-4">
-						<ClipLoader
-							css={override}
-							size={150}
-							color={'#123abc'}
-							loading={this.state.loading}
-						/>
-					</div>
-					{!this.state.loading && (
-						<>
-                        <h1>hola</h1>
-                        <ProductList products={this.state.products} />
-                        </>
-                    )}
-                </div>
-			</>
+			<div className="mt-3 mx-4 w-100">
+				<div className="sweet-loading mt-4">
+					<ClipLoader
+						css={override}
+						size={150}
+						color={'#123abc'}
+						loading={this.state.loading}
+					/>
+				</div>
+				{!this.state.loading && (
+					<>
+						<ProductList products={this.state.products} />
+					</>
+				)}
+			</div>
 		);
 	}
 }
