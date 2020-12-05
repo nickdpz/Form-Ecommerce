@@ -3,9 +3,9 @@ import axios from 'axios';
 import env from "react-dotenv";
 const URL_BASE = env.URL_BASE;
 
-const getProvinces = async() => {
+const getProvinces = async(code) => {
     try {
-        const { data } = await axios.get(`${URL_BASE}/postalCodes/11000`)
+        const { data } = await axios.get(`${URL_BASE}/postalCodes/${code}`)
         return data
     } catch (error) {
         throw error;

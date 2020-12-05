@@ -1,16 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import numeral from 'numeral';
 import '../assets/styles/ProductList.css';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core'; //eslint-disable-line
+import DeleteIcon from '@material-ui/icons/Delete';
 
-export default function ProductList({ products }) {
-	console.log(products);
+export default function ProductList(props) {
 	const moneyFilter = function (value) {
 		if (!value) {
 			return '$ 0';
 		}
 		return numeral(value).format('($ 0,000)');
 	};
+
+	const [edit, setEdit] = useState(false);
+
+	const [total, setTotal] = useState(0);
+
+	const [products, setProducts] = useState(props.products); //eslint-disable-line
+
+	useEffect(() => {
+		const changeTotal = () => {
+			let count = 0;
+			for (const product of products) {
+				count = count + Number(product.price);
+			}
+			setTotal(count);
+		};
+		changeTotal();
+	}, [products]);
+
+	const enableEdit = () => {
+		setEdit(true);
+	};
+
+	const changeTotalProducts = (name) => {
+		let aux = products.filter((item) => item.name !== name);
+		setProducts(aux);
+	};
+
 	return (
 		<div className="">
 			<div className="d-flex justify-content-center align-content-center flex-column">
@@ -33,15 +60,49 @@ export default function ProductList({ products }) {
 									</div>
 								</div>
 							</div>
+							{edit && (
+								<div>
+									<IconButton
+										color="secondary"
+										component="span"
+										onClick={() => changeTotalProducts(item.name)}
+									>
+										<DeleteIcon />
+									</IconButton>
+								</div>
+							)}
 						</div>
 					))}
 				</div>
-				<div className="row px-5 d-flex justify-content-end mt-3">
-					<Button variant="contained" color="secondary">
+				<div className="row px-5 d-flex justify-content-end my-3">
+					<Button variant="contained" color="secondary" onClick={enableEdit}>
 						Editar
 					</Button>
 				</div>
-				<div className="row"></div>
+				<div className="row bg-gray-light d-flex justify-content-around p-3">
+					<div className="">
+						<h5 className="text-dark">Subtotal</h5>
+						<h5 className="text-dark">Envio</h5>
+					</div>
+					<div>
+						<div className="d-flex align-items-end mt-1">
+							<strong className="text-dark">{moneyFilter(total)}</strong>
+							<small className="text-dark">.00</small>
+						</div>
+						<p className="text-dark mt-1">A calcular</p>
+					</div>
+				</div>
+				<div className="row bg-dark d-flex justify-content-around p-3">
+					<div className="">
+						<h5 className="text-white">Total</h5>
+					</div>
+					<div>
+						<div className="d-flex align-items-end ">
+							<strong className="text-white">{moneyFilter(total)}</strong>
+							<small className="text-white">.00</small>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
