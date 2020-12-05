@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import numeral from 'numeral';
-import '../assets/styles/ProductList.css';
-import { Button, IconButton } from '@material-ui/core'; //eslint-disable-line
+import { Button, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { setProducts } from '../store/actions/products';
+import '../assets/styles/ProductList.css';
 
-export default function ProductList(props) {
+export const ProductList = (props) => {
 	const moneyFilter = function (value) {
 		if (!value) {
 			return '$ 0';
@@ -30,12 +32,13 @@ export default function ProductList(props) {
 	}, [products]);
 
 	const enableEdit = () => {
-		setEdit(true);
+		setEdit(!edit);
 	};
 
 	const changeTotalProducts = (name) => {
 		let aux = products.filter((item) => item.name !== name);
 		setProducts(aux);
+		props.setProducts(aux)
 	};
 
 	return (
@@ -106,4 +109,10 @@ export default function ProductList(props) {
 			</div>
 		</div>
 	);
-}
+};
+
+const mapDispatchToProps = {
+	setProducts,
+};
+
+export default connect(null, mapDispatchToProps)(ProductList);

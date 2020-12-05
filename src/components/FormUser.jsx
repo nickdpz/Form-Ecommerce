@@ -1,4 +1,5 @@
-import React, { useState} from 'react';
+import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import sweetAlert from 'sweetalert2';
 import api from '../utils/api';
 import {
@@ -19,7 +20,7 @@ import {
 } from '@material-ui/icons';
 //import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
-export default function FormUsers({ locations }) {
+export const FormUser = (props) => {
 	const [state, setState] = useState({
 		name: '',
 		lastName: '',
@@ -30,8 +31,8 @@ export default function FormUsers({ locations }) {
 		neighborhood: '',
 		address: '',
 		code: '11000',
-		location: locations[0],
-		locations,
+		location: props.locations[0],
+		locations: props.locations,
 		check: false,
 		isEmail: true,
 		isName: true,
@@ -42,6 +43,7 @@ export default function FormUsers({ locations }) {
 		isNeighborhood: true,
 		isAddress: true,
 		isLocation: true,
+		loading: false,
 	});
 
 	const handleCheck = () => {
@@ -56,6 +58,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isEmail: out,
+					email: value,
 				});
 				break;
 			case 'name':
@@ -63,6 +66,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isName: out,
+					name: value,
 				});
 				break;
 			case 'lastName':
@@ -70,6 +74,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isLastName: out,
+					lastName: value,
 				});
 				break;
 			case 'phone':
@@ -77,6 +82,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isPhone: out,
+					phone: value,
 				});
 				break;
 			case 'region':
@@ -84,6 +90,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isRegion: out,
+					region: value,
 				});
 				break;
 			case 'city':
@@ -91,6 +98,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isCity: out,
+					city: value,
 				});
 				break;
 			case 'neighborhood':
@@ -98,6 +106,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isNeighborhood: out,
+					neighborhood: value,
 				});
 				break;
 			case 'address':
@@ -105,6 +114,7 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isAddress: out,
+					address: value,
 				});
 				break;
 			case 'location':
@@ -112,9 +122,11 @@ export default function FormUsers({ locations }) {
 				setState({
 					...state,
 					isLocation: out,
+					location: value,
 				});
 				break;
 			default:
+				setState({ ...state, [name]: value });
 				break;
 		}
 	};
@@ -159,22 +171,70 @@ export default function FormUsers({ locations }) {
 	const handleClick = async () => {
 		if (validatorInfo()) {
 			try {
-				await sweetAlert.fire({
-					title: 'Exíto !',
-					icon: 'success',
-					showConfirmButton: false,
+				setState({ ...state, loading: true });
+				sweetAlert.showLoading();
+				console.log({
+					name: state.name,
+					lastName: state.lastName,
+					phone: state.phone,
+					email: state.email,
+					region: state.region,
+					city: state.city,
+					neighborhood: state.neighborhood,
+					address: state.address,
+					code: state.code,
+					location: state.location,
+					products: props.products.products,
+					check: state.check,
 				});
-			} catch (error) {}
+				let result = await api.createOrder({
+					name: state.name,
+					lastName: state.lastName,
+					phone: state.phone,
+					email: state.email,
+					region: state.region,
+					city: state.city,
+					neighborhood: state.neighborhood,
+					address: state.address,
+					code: state.code,
+					location: state.location,
+					products: props.products.products,
+					check: state.check,
+				});
+				sweetAlert.close();
+				if (result === 200) {
+					await sweetAlert.fire({
+						title: 'Exíto !',
+						icon: 'success',
+						showConfirmButton: false,
+						timer: 3000,
+					});
+				} else {
+					sweetAlert.fire({
+						title: 'Verifica los campos !',
+						text: 'Abra la consola',
+						icon: 'error',
+					});
+				}
+			} catch (error) {
+				sweetAlert.close();
+				console.log(error);
+				sweetAlert.fire({
+					title: 'Verifica los campos !',
+					text: 'Abra la consola',
+					icon: 'error',
+				});
+			}
 		} else {
 			sweetAlert.fire({
 				title: 'Valida los campos',
 				icon: 'info',
 			});
 		}
+		setState({ ...state, loading: false });
 	};
 
 	const handleChange = (event) => {
-		setState({ ...state, [event.target.name]: event.target.value });
 		validator(event.target.name, event.target.value);
 	};
 
@@ -210,6 +270,7 @@ export default function FormUsers({ locations }) {
 						onChange={handleChange}
 						variant="filled"
 						type="text"
+						disabled={state.loading}
 						error={!state.isName}
 						helperText={state.isName ? '' : 'Obligatorio'}
 						InputProps={{
@@ -229,6 +290,7 @@ export default function FormUsers({ locations }) {
 						label="Apellido"
 						variant="filled"
 						type="text"
+						disabled={state.loading}
 						onChange={handleChange}
 						error={!state.isLastName}
 						helperText={state.isLastName ? '' : 'Obligatorio'}
@@ -251,6 +313,7 @@ export default function FormUsers({ locations }) {
 						label="Correo"
 						variant="filled"
 						type="text"
+						disabled={state.loading}
 						onChange={handleChange}
 						error={!state.isEmail}
 						helperText={state.isEmail ? '' : 'Debe ser un Email Valido'}
@@ -274,6 +337,7 @@ export default function FormUsers({ locations }) {
 						error={!state.isPhone}
 						helperText={state.isPhone ? '' : 'Obligatorio'}
 						onChange={handleChange}
+						disabled={state.loading}
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
@@ -295,6 +359,7 @@ export default function FormUsers({ locations }) {
 						label="Código Postal"
 						variant="filled"
 						onChange={handleCode}
+						disabled={state.loading}
 						select
 						InputProps={{
 							startAdornment: (
@@ -348,6 +413,7 @@ export default function FormUsers({ locations }) {
 						label="Estado / Región"
 						variant="filled"
 						type="text"
+						disabled={state.loading}
 						onChange={handleChange}
 						error={!state.isRegion}
 						helperText={state.isRegion ? '' : 'Obligatorio'}
@@ -368,6 +434,7 @@ export default function FormUsers({ locations }) {
 						label="Ciudad"
 						variant="filled"
 						type="text"
+						disabled={state.loading}
 						onChange={handleChange}
 						error={!state.isCity}
 						helperText={state.isCity ? '' : 'Obligatorio'}
@@ -390,6 +457,7 @@ export default function FormUsers({ locations }) {
 						label="Delegación o municipio"
 						variant="filled"
 						type="text"
+						disabled={state.loading}
 						onChange={handleChange}
 						error={!state.isNeighborhood}
 						helperText={state.isNeighborhood ? '' : 'Obligatorio'}
@@ -411,6 +479,7 @@ export default function FormUsers({ locations }) {
 						variant="filled"
 						onChange={handleChange}
 						type="text"
+						disabled={state.loading}
 						error={!state.isAddress}
 						helperText={state.isAddress ? '' : 'Obligatorio'}
 						InputProps={{
@@ -425,13 +494,18 @@ export default function FormUsers({ locations }) {
 			</div>
 
 			<div className="row mt-4 mx-4">
-				<button type="button" className="btn btn-dark mx-2">
+				<button
+					type="button"
+					className="btn btn-dark mx-2"
+					disabled={state.loading}
+				>
 					Libreta de direcciones
 				</button>
 				<button
 					type="button"
 					className="btn btn-dark mx-2"
 					onClick={handleClick}
+					disabled={state.loading}
 				>
 					Guardar
 				</button>
@@ -450,4 +524,10 @@ export default function FormUsers({ locations }) {
 			</div>
 		</div>
 	);
-}
+};
+
+const mapStateToProps = (state) => ({
+	products: state.products,
+});
+
+export default connect(mapStateToProps, null)(FormUser);

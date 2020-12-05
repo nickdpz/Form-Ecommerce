@@ -20,4 +20,13 @@ const getProducts = async() => {
         throw error;
     }
 }
-export default { getProvinces, getProducts }
+
+const createOrder = async(payload) => {
+    try {
+        const { state } = await axios.post(`${URL_BASE}/contact`, payload)
+        return state
+    } catch (error) {
+        throw error;
+    }
+}
+export default { getProvinces, getProducts, createOrder }

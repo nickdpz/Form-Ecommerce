@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import '../assets/styles/Home.css';
 import api from '../utils/api';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ProductList from '../components/ProductList';
 import FormUser from '../components/FormUser';
+import { setProducts } from '../store/actions/products';
+
 
 const override = css`
 	display: block;
@@ -12,7 +15,7 @@ const override = css`
 	border-color: blue;
 `;
 
-class Home extends Component {
+export class Home extends Component {
 	state = {
 		loading: true,
 		error: null,
@@ -28,6 +31,7 @@ class Home extends Component {
 			this.setState({ locations: data.colonies });
 			data = await api.getProducts();
 			this.setState({ products: data });
+			this.props.setProducts(data);
 			this.setState({ loading: false, error: null });
 		} catch (error) {
 			this.setState({ error });
@@ -43,7 +47,7 @@ class Home extends Component {
 			<div className="mt-3 w-100">
 				<div className="sweet-loading my-4">
 					{this.state.loading && <div className="d-flex justify-content-center my-5">
-						<h4>Espera mientras cargan los productos</h4>1
+						<h4>Espera mientras cargan los productos</h4>
 						</div>}
 
 					<ClipLoader
@@ -64,4 +68,9 @@ class Home extends Component {
 	}
 }
 
-export default Home;
+
+const mapDispatchToProps = {
+	setProducts,
+};
+
+export default connect(null, mapDispatchToProps)(Home)
