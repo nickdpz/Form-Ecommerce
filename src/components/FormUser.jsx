@@ -18,7 +18,6 @@ import {
 	PinDrop,
 	Map,
 } from '@material-ui/icons';
-//import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 export const FormUser = (props) => {
 	const [state, setState] = useState({
@@ -131,30 +130,31 @@ export const FormUser = (props) => {
 		}
 	};
 
-	const validatorInfo = () => {
+	function validatorInfo() {
 		let isEmail = /^[\u00f1\u00d1\w._-]{3,25}@[\w.-]{3,30}\.\w{2,5}$/.test(
 			state.email
 		);
-		let isName = !!state.name;
-		let isLastName = !!state.lastName;
-		let isPhone = !!state.phone;
-		let isRegion = !!state.region;
-		let isCity = !!state.city;
-		let isNeighborhood = !!state.neighborhood;
-		let isAddress = !!state.address;
-		let isLocation = !!state.location;
-		setState({
-			...state,
-			isEmail,
-			isName,
-			isLastName,
-			isPhone,
-			isRegion,
-			isCity,
-			isNeighborhood,
-			isAddress,
-			isLocation,
-		});
+		let isName = state.name !== '';
+		let isLastName = state.lastName !== '';
+		let isPhone = state.phone !== '';
+		let isRegion = state.region !== '';
+		let isCity = state.city !== '';
+		let isNeighborhood = state.neighborhood !== '';
+		let isAddress = state.address !== '';
+		setTimeout(() => {
+			setState({
+				...state,
+				isEmail,
+				isName,
+				isLastName,
+				isPhone,
+				isRegion,
+				isCity,
+				isNeighborhood,
+				isAddress,
+			});
+			console.log(state);
+		}, 100);
 		return (
 			isEmail &&
 			isName &&
@@ -163,13 +163,13 @@ export const FormUser = (props) => {
 			isRegion &&
 			isCity &&
 			isNeighborhood &&
-			isAddress &&
-			isLocation
+			isAddress
 		);
-	};
+	}
 
 	const handleClick = async () => {
-		if (validatorInfo()) {
+		const rule = validatorInfo();
+		if (rule) {
 			try {
 				setState({ ...state, loading: true });
 				sweetAlert.showLoading();
@@ -251,6 +251,7 @@ export const FormUser = (props) => {
 			console.log(error);
 		}
 	};
+
 	const handleLocation = (event) => {
 		setState({ ...state, location: event.target.value });
 	};
